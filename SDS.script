@@ -1,0 +1,13 @@
+wget https://web.stanford.edu/group/pritchardlab/UK10K-SDS-values.zip
+
+unzip UK10K-SDS-values.zip
+
+cd /mnt/storage/scratch/lh14833/SDS
+
+awk '{
+   print $1, $2, $3, $4, $5, $6, $7, "chr"$1":"$2":SNP";
+     }' SDS_UK10K_n3195_release_Sep_19_2016.tab > temp
+
+	 
+module add languages/r/3.6.0
+Rscript
