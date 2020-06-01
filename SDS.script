@@ -14,3 +14,10 @@ awk '{
 	 
 module add languages/r/3.6.0
 Rscript SDS_QC.R
+
+#Main Rscript
+
+phen=Height
+Rscript \
+/mnt/storage/scratch/lh14833/Scripts/SDS.R \
+${phen}
