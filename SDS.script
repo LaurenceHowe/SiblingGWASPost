@@ -1,13 +1,16 @@
+#Download and unzip SDS file
 wget https://web.stanford.edu/group/pritchardlab/UK10K-SDS-values.zip
-
 unzip UK10K-SDS-values.zip
+gunzip SDS_UK10K_n3195_release_Sep_19_2016.tab.gz
 
-cd /mnt/storage/scratch/lh14833/SDS
+
+#Add CHRBP column to match with Sibling GWAS
 
 awk '{
    print $1, $2, $3, $4, $5, $6, $7, "chr"$1":"$2":SNP";
      }' SDS_UK10K_n3195_release_Sep_19_2016.tab > temp
 
+#Rscript to QC
 	 
 module add languages/r/3.6.0
-Rscript
+Rscript SDS_QC.R
