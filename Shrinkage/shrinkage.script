@@ -1,0 +1,19 @@
+phen=Height
+./shrinkage-part1.sh $phen
+
+cd /SibSumstats/$phen
+rm ${phen}_shrinkage.txt
+
+module add languages/r/3.6.0
+
+for i in $(< /StudyList/${phen}-studies.txt) *WFTotal.txt
+do
+for j in 1 2
+do
+echo $i >> ${phen}_shrinkage.txt
+
+Rscript shrinkage-part2.R \
+$i \
+$phen \
+$j >> ${phen}_shrinkage.txt
+done
