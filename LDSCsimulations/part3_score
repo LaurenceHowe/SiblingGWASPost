@@ -20,3 +20,26 @@ plink \
 --score $i 2 3 6 \
 --out $i
 done
+
+#Generate raw files
+
+for i in Simulation1-tweaked.txt
+do
+
+cut -d " " -f2 ${i} > temp
+
+plink \
+--bfile data_filtered \
+--extract temp \
+--recode A \
+--out $i
+
+
+plink \
+--bfile data_filtered \
+--extract temp \
+--freq \
+--out $i
+
+rm temp
+done
