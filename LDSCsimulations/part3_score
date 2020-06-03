@@ -1,0 +1,22 @@
+#Create column in CHR:BP:SNP format
+
+for i in Simulation*
+do
+awk '{
+if (($3 == "A" || $3 == "T" || $3 == "C" || $3=="G") &&  ($4 == "A" || $4 == "T" || $4 == "C" || $4=="G"))
+   print $1, "chr"$2":"$7":SNP", $3, $4, $5, $6;
+else
+   print $1, "chr"$1":"$4":INDEL", $3, $4, $5, $6;
+     }' ${i} > ${i}-tweaked.txt
+done 
+
+	 
+# Generate individual genotype scores using PLINK
+
+for i in *tweaked.txt
+do
+plink \
+--bfile data_filtered \
+--score $i 2 3 6 \
+--out $i
+done
