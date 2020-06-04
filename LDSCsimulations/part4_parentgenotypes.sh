@@ -1,3 +1,6 @@
+##Script to generate parental genotypes based on sibling genotypes
+##Assumes laws of Mendelian inheritance, random mating and HWE
+
 require(data.table)
 
 rawfile <- fread("Simulation1-tweaked.txt.raw")
