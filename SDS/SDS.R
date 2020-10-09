@@ -25,10 +25,10 @@ merge$BETA <- merge$BETA_WF
 merge$PV <- merge$P_BETA_WF
 }
 
-merge$SDS_tweak[merge$A1 == merge$DA & merge$BETA >0] <- merge$SDS[merge$A1 == merge$DA & merge$BETA >0]
-merge$SDS_tweak[merge$A1 == merge$DA & merge$BETA <0] <- (-1)*merge$SDS[merge$A1 == merge$DA & merge$BETA <0]
-merge$SDS_tweak[merge$A2 == merge$DA & merge$BETA <0] <- merge$SDS[merge$A2 == merge$DA & merge$BETA <0]
-merge$SDS_tweak[merge$A2 == merge$DA & merge$BETA >0] <- (-1)*merge$SDS[merge$A2 == merge$DA & merge$BETA >0]
+merge$SDS_tweak[merge$A1 == merge$DA & merge$BETA >0] <- merge$SDS_STD[merge$A1 == merge$DA & merge$BETA >0]
+merge$SDS_tweak[merge$A1 == merge$DA & merge$BETA <0] <- (-1)*merge$SDS_STD[merge$A1 == merge$DA & merge$BETA <0]
+merge$SDS_tweak[merge$A2 == merge$DA & merge$BETA <0] <- merge$SDS_STD[merge$A2 == merge$DA & merge$BETA <0]
+merge$SDS_tweak[merge$A2 == merge$DA & merge$BETA >0] <- (-1)*merge$SDS_STD[merge$A2 == merge$DA & merge$BETA >0]
 
 merge <- merge[!which(is.na(merge$SDS_tweak)), ]
 
