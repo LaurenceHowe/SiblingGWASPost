@@ -55,4 +55,52 @@ Ratio <- IVWBeta_WF / IVWBeta_TOTAL
 cov_matrix <- matrix(c(IVWSE_WF^2, 0, 0, IVWSE_TOTAL^2), nrow=2, ncol=2)
 RatioSE <- deltamethod(g=~(x1)/x2, mean=c(IVWBeta_WF, IVWBeta_TOTAL), cov=cov_matrix)
 
+#Jackknife blocks for each SNP
+
+k <- nrow(merge)
+merge$Order <- 1:k
+
+#Loop
+
+output <- NULL
+
+for (i in 1:k) {
+
+block <- merge[! which(merge$Order == i), ]
+
+block$BETA_TOTAL_H[block$A1 == block$ALLELE1] <- block$BETA_TOTAL[block$A1 == block$ALLELE1]
+block$BETA_TOTAL_H[block$A1 == block$ALLELE0] <- (-1)*block$BETA_TOTAL[block$A1 == block$ALLELE0]
+block$TOTAL_TOP <- block$BETA * block$BETA_TOTAL_H * (1/block$SE_BETA_TOTAL^2)
+block$TOTAL_BOT <- block$BETA^2 * (1/block$SE_BETA_TOTAL^2)
+
+
+temp1 <- sum(block$TOTAL_TOP) / sum(block$TOTAL_BOT)
+
+
+block$BETA_WF_H[block$A1 == block$ALLELE1] <- block$BETA_WF[block$A1 == block$ALLELE1]
+block$BETA_WF_H[block$A1 == block$ALLELE0] <- (-1)*block$BETA_WF[block$A1 == block$ALLELE0]
+block$WF_TOP <- block$BETA * block$BETA_WF_H * (1/block$SE_BETA_WF^2)
+block$WF_BOT <- block$BETA^2 * (1/block$SE_BETA_WF^2)
+
+temp2 <- sum(block$WF_TOP) / sum(block$WF_BOT)
+
+temp3 <- cbind(temp1, temp2)
+
+output <- rbind(output, temp3)
+}
+
+
+output2 <- as.data.frame(output)
+names(output2) <- c("Total", "WF")
+output2$Ratio <- output2$WF / output2$Total
+
+output2$SS <- (mean(output2$Ratio) - output2$Ratio) ^2
+print(mean(output2$Ratio))
+BootSE <- sqrt(sum(output2$SS)* ((k-1)/k))
+
+
+#Original SE from delta method
 print(c(1-Ratio, 1-(Ratio + 1.96*RatioSE), 1-(Ratio - 1.96*RatioSE)))
+
+#Bootstrapped SEs
+print(c(1-Ratio, 1-(Ratio + 1.96*BootSE), 1-(Ratio - 1.96*BootSE)))
