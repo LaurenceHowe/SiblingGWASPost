@@ -104,3 +104,24 @@ print(c(1-Ratio, 1-(Ratio + 1.96*RatioSE), 1-(Ratio - 1.96*RatioSE)))
 
 #Bootstrapped SEs
 print(c(1-Ratio, 1-(Ratio + 1.96*BootSE), 1-(Ratio - 1.96*BootSE)))
+
+
+####IVW/Heterogeneity code (adapted from Gibran Hemani code)
+
+merge$W <- (merge$BETA_TOTAL ^2) / merge$SE_BETA_WF^2
+merge$Wj <- sqrt(merge$W)
+
+merge$SNPRatios <- merge$BETA_WF / merge$BETA_TOTAL
+merge$BetaWj <- merge$SNPRatios * merge$Wj
+
+mod <- lm(BetaWj ~ -1 + Wj, data = merge)$coef[1]
+merge$Wj <- ((merge$SE_BETA_WF^2 + (mod^2*merge$SE_BETA_TOTAL^2)) / merge$BETA_TOTAL^2)^-1 %>% sqrt
+merge$BetaWj <- merge$SNPRatios * merge$Wj
+
+mod2 <- summary(lm(BetaWj ~ -1 + Wj, data = merge))
+ivw <- coefficients(mod2)[1,1]
+ivw_se <- coefficients(mod2)[1,2]
+
+merge$Qj <- merge$Wj^2 * (merge$SNPRatios - ivw)^2
+Q <- sum(merge$Qj)
+Qpval <- pchisq(Q, length(merge)-1, lower.tail=FALSE)
