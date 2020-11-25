@@ -124,4 +124,4 @@ ivw_se <- coefficients(mod2)[1,2]
 
 merge$Qj <- merge$Wj^2 * (merge$SNPRatios - ivw)^2
 Q <- sum(merge$Qj)
-Qpval <- pchisq(Q, length(merge)-1, lower.tail=FALSE)
+Qpval <- pchisq(Q, nrow(merge)-1, lower.tail=FALSE)
