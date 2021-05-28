@@ -5,7 +5,7 @@ require(forestplot)
 #Read in estimates
 data <- fread("Table-h2_SumHer.txt")
 
-#Define within-sibship and population (total estimates)
+#Define within-sibship and population (total) estimates
 data$WF <- rep(1:2, times=1, nrow(data))
 Total <- data[which(data$WF == 1), ]
 WF <- data[which(data$WF == 2), ]
